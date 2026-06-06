@@ -1,18 +1,16 @@
 package main
 
-import "github.com/authlib"
+import (
+	"log"
+	"net/http"
+)
 
 func main() {
-	// This is a placeholder for the main application logic.
-	// The actual implementation would include setting up routes, handling requests,
-	// and integrating with the authentication library.
-	username := "admin"
-	password := "password"
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /users", listUsers)
+	mux.HandleFunc("POST /users", createUser)
+	mux.HandleFunc("GET /users/{id}", getUser)
 
-	if authlib.AuthenticateUser(username, password) {
-		token := authlib.GenerateToken(username)
-		println("Authentication successful. Token:", token)
-	} else {
-		println("Authentication failed.")
-	}
+	log.Println("API listening on :8080")
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
